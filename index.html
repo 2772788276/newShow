@@ -494,6 +494,83 @@
   </body>
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
+    const header = document.querySelector('.header');
+    const container = document.querySelector('.container');
+    const joinus = document.querySelector('.joinus');
+    const introduction = document.querySelector('.introduction');
+    const containerTop = container.getBoundingClientRect().top;
+    const introductionTop = introduction.getBoundingClientRect().top;
+    const swiperDOM = document.querySelector('.swiper');
+    const card1 = document.querySelector('.card1');
+    const technology = document.querySelector('.technology');
+    const technologyTop = technology.getBoundingClientRect().top;
+    const card = document.querySelectorAll('.card');
+    const images = document.querySelector('.imgs');
+    const apply = document.querySelector('.apply');
+    const applyTop = apply.getBoundingClientRect().top;
+    const card2 = document.querySelectorAll('.card2');
+    let scrollTop = 0;
+    let timer = '';
+    const throttle = (fn, delay) => {
+      if (timer) {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          fn();
+        }, delay);
+      } else {
+        timer = setTimeout(() => {
+          fn();
+        }, delay);
+      }
+    };
+    //导航栏变化函数
+    const handleScroll = () => {
+      nextScrollTop = container.scrollTop;
+
+      if (nextScrollTop == 0) {
+        header.classList.remove('headerActive');
+      } else {
+        if (nextScrollTop > scrollTop) {
+          header.classList.add('headerActive');
+        } else {
+          header.classList.remove('headerActive');
+        }
+      }
+      if (nextScrollTop >= introductionTop) {
+        joinus.classList.add('joinusActive');
+        swiperDOM.classList.add('appear');
+        card1.classList.add('appear');
+      } else {
+        joinus.classList.remove('joinusActive');
+        swiperDOM.classList.remove('appear');
+        card1.classList.remove('appear');
+      }
+      if (nextScrollTop >= 0) {
+        card.forEach((item) => {
+          item.classList.add('appear');
+        });
+      } else {
+        card.forEach((item) => {
+          item.classList.remove('appear');
+        });
+      }
+      if (nextScrollTop >= applyTop) {
+        images.classList.add('appear');
+        card2.forEach((item) => {
+          item.classList.add('appear');
+        });
+      } else {
+        images.classList.remove('appear');
+        card2.forEach((item) => {
+          item.classList.remove('appear');
+        });
+      }
+      scrollTop = nextScrollTop;
+    };
+    container.addEventListener('scroll', () => {
+      throttle(handleScroll, 50);
+    });
+    handleScroll();
     var swiper = new Swiper('.mySwiper', {
       effect: 'cards',
       grabCursor: true,
@@ -540,9 +617,9 @@
       box-sizing: border-box;
     }
     body {
-      background: url(./img/robot.png) no-repeat,
+      background: url(./img/图片1.png) no-repeat,
         url(./img/pattern.png) no-repeat;
-      background-size: 50%, 100vw 100vh;
+      background-size: 100vw, 100vw 100vh;
       background-attachment: fixed;
       background-position: center;
     }
@@ -561,15 +638,24 @@
       flex-direction: row;
       justify-content: space-between;
       z-index: 99;
+      transition: all 0.5s;
+      overflow: hidden;
+      opacity: 1;
+    }
+    .headerActive {
+      height: 0;
+      opacity: 0;
     }
     .logo {
-      height: 100%;
+      height: 50px;
       margin-left: 30px;
     }
     .container {
       height: 100vh;
       width: 100vw;
       overflow-y: scroll;
+      box-sizing: border-box;
+      overflow-x: hidden;
     }
     .container > div {
       height: 900px;
@@ -601,6 +687,7 @@
     }
     .card {
       position: relative;
+      opacity: 0;
       width: 220px;
       height: 300px;
       display: flex;
@@ -705,6 +792,10 @@
     }
     .joinus {
       width: 150px;
+      transition: all 0.5s;
+    }
+    .joinusActive {
+      transform: rotate(-90deg);
     }
     .introductionBox {
       display: flex;
@@ -1133,6 +1224,7 @@
       flex-direction: row;
     }
     .swiper {
+      opacity: 0;
       width: 240px;
       height: 320px;
     }
@@ -1201,6 +1293,7 @@
       color: gray;
     }
     .card1 {
+      opacity: 0;
       width: 300px;
       height: 200px;
       perspective: 1000px;
@@ -1362,6 +1455,7 @@
       color: white;
       cursor: pointer;
       transition: 400ms;
+      opacity: 0;
     }
 
     .cards2 .card2 p.tip {
@@ -1399,6 +1493,7 @@
       display: flex;
       flex-direction: column;
       width: 60%;
+      opacity: 0;
     }
 
     .icon {
@@ -1549,6 +1644,19 @@
       text-decoration: none; /* 去除默认的下划线 */
       outline: none; /* 去除旧版浏览器的点击后的外虚线框 */
       color: white; /* 去除默认的颜色和点击后变化的颜色 */
+    }
+    .appear {
+      animation: appear 1s ease 0s 1 forwards;
+    }
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </html>
